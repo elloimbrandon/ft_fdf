@@ -1,4 +1,4 @@
-SRCS = 
+SRCS = ./SRCS/ft_fdf.c ./SRCS/init_structs.c ./SRCS/checks.c
 
 FLAGS = -Wall -Wextra -Werror
 
