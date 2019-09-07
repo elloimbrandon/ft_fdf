@@ -50,7 +50,7 @@ void       handle_errors(int argc)
 {
     if (argc < 2)
     {
-        ft_putendl("usage: Not enough arguments... ./fdf [filename]");
+        ft_putendl("usage: ... ./ft_fdf [filename]");
         exit(1);   
     }
     // invalid map error
