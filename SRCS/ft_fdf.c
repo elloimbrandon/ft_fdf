@@ -25,7 +25,7 @@ void builder(t_info *info, int fd)
     {
         if(valid_file(tmp) == 0)
         {
-            nums = ft_strinfolit(tmp, ' ');
+            nums = ft_strsplit(tmp, ' ');
             info->map[i] = (int*)malloc(sizeof(int) * size2D(nums) + 1);
             j = 0;
             while (nums[j]) 
@@ -45,6 +45,7 @@ void builder(t_info *info, int fd)
     }
     close(fd);
 }
+
 
 void    handle_y(t_info *info, int x, int y)
 {
@@ -68,7 +69,7 @@ void    handle_x(t_info *info, int x, int y)
     draw_line(info);
 }
 
-void    ft_plot_ponts(t_info *info)
+int    ft_plot_ponts(t_info *info)
 {
     int x;
     int y;
@@ -76,7 +77,7 @@ void    ft_plot_ponts(t_info *info)
     x = -1;
     while (++x < info->line_x)
     {
-        int y = -1;
+        y = -1;
         while (++y < info->line_y)
         {
             if (x + 1 < (info->line_x))
@@ -85,13 +86,14 @@ void    ft_plot_ponts(t_info *info)
                 handle_y(info, x, y);
         }
     }
+    return(0);
 }
 
 void    ft_fdf(t_info *info)
 {
     info->mlx = (t_head *)malloc(sizeof(t_head));
     info->mlx->mlx_ptr = mlx_init();
-    info->mlx->mlx_window = mlx_new_window(info->mlx->mlx_ptr, 500, 500, "Brfeltz 42_FDF");
+    info->mlx->mlx_window = mlx_new_window(info->mlx->mlx_ptr, 1000, 1000, "Brfeltz 42_FDF");
     mlx_loop_hook(info->mlx->mlx_ptr, ft_plot_points, info);
 
 }
@@ -111,6 +113,7 @@ int         main(int argc, char **argv)
         info->map = (int**)malloc(sizeof(int*) * (info->line_y + 1));
         builder(info, open(argv[1], O_RDONLY));
         ft_fdf(info);
+        mlx_loop(info->mlx);
     }
     else
         handle_errors(argc);

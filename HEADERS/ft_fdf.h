@@ -1,7 +1,7 @@
 #ifndef FT_FDF
 # define FT_FDF
 # include "../libft/libft.h"
-# include "../minilibx/mlx.h"
+# include "../minilibx_macos/mlx.h"
 # include <unistd.h>
 # include <stdio.h>
 # include <stdlib.h>
@@ -60,7 +60,7 @@ typedef struct      s_info
 int    ft_map_size_parse(int fd);
 int    valid_file(char *str);
 int    size2D(char **arr);
-void   ft_plot_points(t_info *info);
+int   ft_plot_points(t_info *info);
 void   handle_x(t_info *info, int x, int y);
 void   handle_y(t_info *info, int x, int y);
 void   ft_fdf(t_info *info);

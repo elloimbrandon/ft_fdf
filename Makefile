@@ -1,20 +1,26 @@
 SRCS = ./SRCS/ft_fdf.c ./SRCS/init_structs.c ./SRCS/checks.c
 
-FLAGS = -Wall -Wextra -Werror
-
 NAME = ft_fdf
 
+FLAGS = -Wall -Werror -Wextra
+
 LIBFT = libft
+
+MINLIB = minilibx_macos
+
+MINILIBX = -I minilibx_macos -L minilibx_macos -lmlx -framework OpenGL -framework AppKit
+
+GCC = gcc
 
 all: $(NAME)
 
 $(NAME):
 	@make -C $(LIBFT)
-	@gcc $(FLAGS) $(SRCS) -L $(LIBFT) -lft -o $(NAME)
+	@make -C $(MINLIB)
+	$(GCC) $(FLAGS) $(MINILIBX) $(SRCS) -L $(LIBFT) -lft -o $(NAME)
 
 clean:
 	@rm -rf $(NAME)
-	@rm -rf ft_ls.dSYM
 	@make clean -C $(LIBFT)
 
 fclean: clean
@@ -24,5 +30,3 @@ re: fclean all
 
 debug:
 	@gcc $(SRCS) -L $(LIBFT) -lft -o $(NAME) -g -fsanitize=address
-
-
