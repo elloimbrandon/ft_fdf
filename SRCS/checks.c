@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   checks.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: brfeltz <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/09/09 16:26:54 by brfeltz           #+#    #+#             */
+/*   Updated: 2019/09/09 16:27:01 by brfeltz          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../HEADERS/ft_fdf.h"
 
 int size2D(char **arr)
@@ -8,6 +20,19 @@ int size2D(char **arr)
     while (arr[i])
         i += 1;
     return (i);
+}
+
+void line_counter(int fd, t_info *info) 
+{
+    char *tmp;
+    int ret;
+
+    ret = 0;
+    while (get_next_line(fd, &tmp)) 
+        ret += 1;
+    info->line_y = ret;
+    free(tmp);
+    close(fd);
 }
 
 void        ft_isfile(char *str)
@@ -45,7 +70,7 @@ int    valid_file(char *str)
     return (0);
 
 }
-//void       handle_errors(int argc, t_info *info)
+
 void       handle_errors(int argc)
 {
     if (argc < 2)
@@ -53,7 +78,4 @@ void       handle_errors(int argc)
         ft_putendl("usage: ... ./ft_fdf [filename]");
         exit(1);   
     }
-    // invalid map error
-    // map read error
-    // mlx error
 }

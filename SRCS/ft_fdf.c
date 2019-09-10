@@ -1,121 +1,83 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_fdf.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/09/09 16:27:10 by brfeltz           #+#    #+#             */
+/*   Updated: 2019/09/09 17:52:44 by brfeltz          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../HEADERS/ft_fdf.h"
-#include <stdio.h> //// REMOVEEEEEEEEEEEEEEEEEEEEEEEEEEEE
 
-void line_counter(int fd, t_info *info) 
+void	builder(t_info *info, int fd)
 {
-    char *tmp;
-    int ret;
+	char	*tmp;
+	char	**nums;
+	int		i;
+	int		j;
 
-    ret = 0;
-    while (get_next_line(fd, &tmp)) 
-        ret += 1;
-    info->line_y = ret;
-    close(fd);
+	i = 0;
+	while (get_next_line(fd, &tmp)) 
+	{
+		if(valid_file(tmp) == 0)
+		{
+			nums = ft_strsplit(tmp, ' ');
+			info->map[i] = ft_memalloc(sizeof(int) * (size2D(nums) + 1) * sizeof(info->map));
+			j = 0;
+			while (nums[j]) 
+			{
+				info->map[i][j] = ft_atoi(nums[j]);
+				j += 1; 
+			}
+			i += 1;
+			info->line_x = size2D(nums);
+			free_str(nums);
+			free(tmp);
+		}
+		else
+		{
+			ft_putendl("invalid map file...");
+			exit(1);
+		}
+	}
+	close(fd);  
+}
+#include <stdio.h> ////////////////////////SEX
+void	ft_fdf(t_info *info)
+{
+	info->mlx = (t_head *)malloc(sizeof(t_head));
+	info->mlx->mlx_ptr = mlx_init();
+	info->mlx->mlx_window = mlx_new_window(info->mlx->mlx_ptr, 1000, 1000, "Brfeltz 42_FDF");
+	key_management(info);
+	mlx_loop_hook(info->mlx->mlx_ptr, ft_plot_points, info);
+	mlx_loop(info->mlx);
 }
 
-void builder(t_info *info, int fd)
+int		main(int argc, char **argv)
 {
-    char    *tmp;
-    char    **nums;
-    int     i;
-    int     j;
+	t_info	*info;
 
-    i = 0;
-    while (get_next_line(fd, &tmp)) 
-    {
-        if(valid_file(tmp) == 0)
-        {
-            nums = ft_strsplit(tmp, ' ');
-            info->map[i] = (int*)malloc(sizeof(int) * size2D(nums) + 1);
-            j = 0;
-            while (nums[j]) 
-            {
-                info->map[i][j] = ft_atoi(nums[j]);
-                j += 1; 
-            }
-            i += 1;
-            info->line_x = size2D(nums);
-            free(nums);
-        }
-        else
-        {
-            ft_putendl("invalid map file...");
-            exit(1);
-        }
-    }
-    close(fd);
-}
-
-
-void    handle_y(t_info *info, int x, int y)
-{
-    info->map_info->map_points->x = x * 10;
-    info->map_info->map_points->sx = x * 10;
-    info->map_info->map_points->y = x * 10;
-    info->map_info->map_points->sy = x * 10;
-    info->map_info->map_points->z = info->map[x][y];
-    info->map_info->map_points->sz = info->map[x][y + 1];
-    draw_line(info);
-}
-
-void    handle_x(t_info *info, int x, int y)
-{
-    info->map_info->map_points->x = x * 10;
-    info->map_info->map_points->sx = x * 10;
-    info->map_info->map_points->y = x * 10;
-    info->map_info->map_points->sy = x * 10;
-    info->map_info->map_points->z = info->map[x][y];
-    info->map_info->map_points->sz = info->map[x + 1][y];
-    draw_line(info);
-}
-
-int    ft_plot_ponts(t_info *info)
-{
-    int x;
-    int y;
-
-    x = -1;
-    while (++x < info->line_x)
-    {
-        y = -1;
-        while (++y < info->line_y)
-        {
-            if (x + 1 < (info->line_x))
-                handle_x(info, x, y);
-            if (y + 1 < (info->line_y))
-                handle_y(info, x, y);
-        }
-    }
-    return(0);
-}
-
-void    ft_fdf(t_info *info)
-{
-    info->mlx = (t_head *)malloc(sizeof(t_head));
-    info->mlx->mlx_ptr = mlx_init();
-    info->mlx->mlx_window = mlx_new_window(info->mlx->mlx_ptr, 1000, 1000, "Brfeltz 42_FDF");
-    mlx_loop_hook(info->mlx->mlx_ptr, ft_plot_points, info);
-
-}
-
-int         main(int argc, char **argv)
-{
-    t_info  *info;
-
-    info = ft_memalloc(sizeof(t_info));
-    info->map_info = ft_memalloc(sizeof(t_map));
-    info->map_info->map_points = ft_memalloc(sizeof(t_map_points));
-    zero_out(info);
-    if (argc == 2)
-    {
-        ft_isfile(argv[1]);
-        line_counter(open(argv[1], O_RDONLY), info);
-        info->map = (int**)malloc(sizeof(int*) * (info->line_y + 1));
-        builder(info, open(argv[1], O_RDONLY));
-        ft_fdf(info);
-        mlx_loop(info->mlx);
-    }
-    else
-        handle_errors(argc);
-    return(0);
+	info = ft_memalloc(sizeof(t_info));
+	info->keys = ft_memalloc(sizeof(t_keys));
+	info->map_points = ft_memalloc(sizeof(t_map_points));
+	info->map_points->head = ft_memalloc(sizeof(t_line_alg));
+	zero_out(info);
+	if (argc == 2)
+	{
+		ft_isfile(argv[1]);
+		line_counter(open(argv[1], O_RDONLY), info);
+		info->map = ft_memalloc(sizeof(int*) * (info->line_y + 1) * sizeof(info->map));
+		builder(info, open(argv[1], O_RDONLY));
+		ft_fdf(info);
+	}
+	else
+	{
+		handle_errors(argc);
+		//free_all(info);
+	}
+	while(1);
+	return(0);
 }

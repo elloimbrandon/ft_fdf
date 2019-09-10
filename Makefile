@@ -1,4 +1,4 @@
-SRCS = ./SRCS/ft_fdf.c ./SRCS/init_structs.c ./SRCS/checks.c
+SRCS = ./SRCS/ft_fdf.c ./SRCS/init_structs.c ./SRCS/checks.c ./SRCS/lines.c ./SRCS/ft_tools.c ./SRCS/ft_keys.c ./SRCS/rotations.c
 
 NAME = ft_fdf
 
@@ -29,4 +29,4 @@ fclean: clean
 re: fclean all
 
 debug:
-	@gcc $(SRCS) -L $(LIBFT) -lft -o $(NAME) -g -fsanitize=address
+	@gcc $(SRCS) $(MINILIBX) -L $(LIBFT) -lft -o $(NAME) -g -fsanitize=address
