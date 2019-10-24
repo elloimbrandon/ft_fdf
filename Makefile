@@ -10,14 +10,12 @@ MINLIB = minilibx_macos
 
 MINILIBX = -I minilibx_macos -L minilibx_macos -lmlx -framework OpenGL -framework AppKit
 
-GCC = gcc
-
 all: $(NAME)
 
 $(NAME):
 	@make -C $(LIBFT)
 	@make -C $(MINLIB)
-	$(GCC) $(FLAGS) $(MINILIBX) $(SRCS) -L $(LIBFT) -lft -o $(NAME)
+	@gcc $(SRCS) $(MINILIBX) -L $(LIBFT) -lft -o $(NAME)
 
 clean:
 	@rm -rf $(NAME)
